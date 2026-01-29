@@ -1,0 +1,146 @@
+import { Notice, Plugin, WorkspaceLeaf } from "obsidian";
+import { SimilarNotesIndex } from "./index";
+import { SimilarNotesView, VIEW_TYPE_SIMILAR_NOTES } from "./SimilarNotesView";
+import {
+  SimilarNotesSettings,
+  SimilarNotesSettingTab,
+  DEFAULT_SETTINGS,
+} from "./settings";
+
+export default class SimilarNotesPlugin extends Plugin {
+  settings: SimilarNotesSettings = DEFAULT_SETTINGS;
+  index: SimilarNotesIndex | null = null;
+
+  async onload(): Promise<void> {
+    await this.loadSettings();
+
+    // Initialize the similarity index
+    this.index = new SimilarNotesIndex(this.app, {
+      maxResults: this.settings.maxResults,
+      minSimilarity: this.settings.minSimilarity / 100,
+      useHashing: true,
+      hashDim: this.settings.hashDim,
+      contentExcerptLength: this.settings.contentExcerptLength,
+    });
+
+    // Register the sidebar view
+    this.registerView(VIEW_TYPE_SIMILAR_NOTES, (leaf) => new SimilarNotesView(leaf, this));
+
+    // Add ribbon icon
+    this.addRibbonIcon("file-search", "Similar Notes", () => {
+      this.activateView();
+    });
+
+    // Add commands
+    this.addCommand({
+      id: "show-similar-notes",
+      name: "Show similar notes panel",
+      callback: () => {
+        this.activateView();
+      },
+    });
+
+    this.addCommand({
+      id: "rebuild-index",
+      name: "Rebuild similarity index",
+      callback: async () => {
+        await this.rebuildIndex();
+      },
+    });
+
+    this.addCommand({
+      id: "check-for-changes",
+      name: "Check for changes",
+      callback: async () => {
+        const changes = await this.index?.checkForChanges();
+        if (changes) {
+          const total = changes.added + changes.modified + changes.deleted;
+          if (total > 0) {
+            // eslint-disable-next-line no-new
+            new Notice(
+              `Found ${total} changes: ${changes.added} added, ${changes.modified} modified, ${changes.deleted} deleted`
+            );
+          } else {
+            // eslint-disable-next-line no-new
+            new Notice("Index is up to date");
+          }
+        }
+      },
+    });
+
+    // Add settings tab
+    this.addSettingTab(new SimilarNotesSettingTab(this.app, this));
+
+    // Build index on layout ready (after vault is loaded)
+    this.app.workspace.onLayoutReady(async () => {
+      await this.index?.buildIndex();
+
+      // Open panel on start if configured
+      if (this.settings.openOnStart) {
+        this.activateView();
+      }
+    });
+  }
+
+  onunload(): void {
+    this.app.workspace.detachLeavesOfType(VIEW_TYPE_SIMILAR_NOTES);
+  }
+
+  async loadSettings(): Promise<void> {
+    this.settings = Object.assign({}, DEFAULT_SETTINGS, await this.loadData());
+  }
+
+  async saveSettings(): Promise<void> {
+    await this.saveData(this.settings);
+
+    // Update index options
+    if (this.index) {
+      this.index.updateOptions({
+        maxResults: this.settings.maxResults,
+        minSimilarity: this.settings.minSimilarity / 100,
+        hashDim: this.settings.hashDim,
+        contentExcerptLength: this.settings.contentExcerptLength,
+      });
+    }
+  }
+
+  async rebuildIndex(): Promise<void> {
+    if (!this.index) return;
+
+    // eslint-disable-next-line no-new
+    new Notice("Building similarity index...");
+    await this.index.buildIndex();
+    // eslint-disable-next-line no-new
+    new Notice(`Index built: ${this.index.getDocumentCount()} notes`);
+
+    // Refresh any open views
+    this.app.workspace.getLeavesOfType(VIEW_TYPE_SIMILAR_NOTES).forEach((leaf) => {
+      if (leaf.view instanceof SimilarNotesView) {
+        leaf.view.refresh();
+      }
+    });
+  }
+
+  async activateView(): Promise<void> {
+    const { workspace } = this.app;
+
+    let leaf: WorkspaceLeaf | null = null;
+    const leaves = workspace.getLeavesOfType(VIEW_TYPE_SIMILAR_NOTES);
+
+    if (leaves.length > 0) {
+      leaf = leaves[0];
+    } else {
+      leaf = workspace.getRightLeaf(false);
+      if (leaf) {
+        await leaf.setViewState({
+          type: VIEW_TYPE_SIMILAR_NOTES,
+          active: true,
+        });
+      }
+    }
+
+    if (leaf) {
+      workspace.revealLeaf(leaf);
+    }
+  }
+}

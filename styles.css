@@ -1,0 +1,70 @@
+/* Similar Notes Plugin Styles */
+
+.similar-notes-container {
+  padding: 10px;
+}
+
+.similar-notes-empty {
+  text-align: center;
+  padding: 20px;
+  color: var(--text-muted);
+}
+
+.similar-notes-empty-title {
+  font-weight: 500;
+  margin-bottom: 5px;
+}
+
+.similar-notes-empty-desc {
+  font-size: 0.85em;
+}
+
+.similar-notes-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.similar-notes-item {
+  margin-bottom: 4px;
+}
+
+.similar-notes-link {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 10px;
+  border-radius: 4px;
+  text-decoration: none;
+  color: var(--text-normal);
+  transition: background-color 0.1s ease;
+}
+
+.similar-notes-link:hover {
+  background-color: var(--background-modifier-hover);
+}
+
+.similar-notes-title {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  margin-right: 10px;
+}
+
+.similar-notes-score {
+  flex-shrink: 0;
+  font-size: 0.85em;
+  color: var(--text-muted);
+  background-color: var(--background-modifier-border);
+  padding: 2px 6px;
+  border-radius: 3px;
+}
+
+.similar-notes-footer {
+  margin-top: 15px;
+  padding-top: 10px;
+  border-top: 1px solid var(--background-modifier-border);
+  text-align: center;
+  color: var(--text-muted);
+}
