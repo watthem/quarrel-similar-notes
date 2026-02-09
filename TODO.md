@@ -6,6 +6,15 @@ Public roadmap for the Quarrel Similar Notes Obsidian plugin.
 
 Issues that must be fixed before the first public release.
 
+### Release Pipeline
+
+- [ ] **0.1.0 milestone** - Align on scope and freeze for 0.1.0
+  - Confirm no blockers in `FEEDBACK.md`
+  - Decide whether to ship with or without incremental indexing
+- [x] **Release script** - Build and package `main.js`, `manifest.json`, `styles.css`
+  - Script: `scripts/release.mjs`
+  - Command: `npm run release`
+
 ### Code Quality
 
 - [x] **Fix Notice import** - Replace `declare function Notice` with proper import from obsidian
@@ -43,6 +52,16 @@ Issues that must be fixed before the first public release.
   - No telemetry or analytics
   - No external accounts required
   - Dependencies: `@watthem/quarrel` (MIT, no network)
+
+### Beta / Feedback
+
+- [ ] **Recruit early testers** - Post invite and collect issues
+  - Create a short survey or feedback template
+  - Track feedback in `FEEDBACK.md`
+  - Triage issues into this TODO
+- [ ] **Obsidian forum draft** - Draft the release announcement post
+  - Include: summary, features, privacy/local-first notes, install instructions
+  - Add screenshots/GIFs if available
 
 ---
 

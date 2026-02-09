@@ -61,10 +61,14 @@ This plugin follows Obsidian's recommended disclosure guidelines:
 |---------|--------|
 | Network calls | **None** - All processing is 100% local |
 | External APIs | **None** - No API keys or accounts required |
+| Accounts | **None** - No sign-in required |
 | Telemetry/Analytics | **None** - No tracking of any kind |
-| Data storage | Index stored locally in vault's plugin folder |
+| External file access | **Vault only** - Reads note content and writes the similarity index to the plugin data folder |
+| Data storage | Index stored locally in vault's plugin data folder |
 | Dependencies | [@watthem/quarrel](https://github.com/watthem/quarrel) (MIT, no network) |
 | Payments | **None** - Fully free and open source |
+| Ads | **None** |
+| Closed-source components | **None** |
 
 Your notes never leave your device.
 

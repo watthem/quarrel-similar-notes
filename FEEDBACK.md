@@ -16,7 +16,7 @@ Use it to track fixes and keep releases aligned with the official expectations.
 - [x] manifest.json has a unique `id` and a clear `name`. (`id: "quarrel-similar-notes"`.)
 - [x] manifest.json `version` uses semantic versioning (e.g., 0.1.0).
 - [x] Do not commit `main.js` to the repo; include it only in GitHub releases. (`main.js` is ignored.)
-- [ ] Release assets include: `main.js`, `manifest.json`, and `styles.css` (if used).
+- [ ] Release assets include: `main.js`, `manifest.json`, and `styles.css` (used by `SimilarNotesView`).
 - [x] Consider adding `fundingUrl` in manifest.json.
 - [x] Ensure `versions.json` exists if the `version` script expects it.
 

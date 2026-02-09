@@ -14,6 +14,10 @@ export interface SimilarNote {
   title: string;
   similarity: number;
   percentage: number;
+  snippet: string;
+  tags: string[];
+  date: Date | null;
+  folder: string;
 }
 
 interface IndexedDocument {
@@ -156,16 +160,130 @@ export class SimilarNotesIndex {
   }
 
   /**
-   * Get similar notes in a structured format for display
+   * Extract top TF-IDF keywords from a note for chip display.
+   * Computes term frequency in the note and inverse document frequency
+   * across the corpus to surface the most distinctive terms.
+   */
+  getKeywords(file: TFile, count = 6): string[] {
+    const docIdx = this.documents.findIndex((d) => d.path === file.path);
+    if (docIdx === -1 || this.documents.length === 0) {
+      return [];
+    }
+
+    const doc = this.documents[docIdx];
+    const tokens = quarrel.tokenize(quarrel.normalizeMarkdown(doc.content));
+
+    if (tokens.length === 0) return [];
+
+    // Term frequency for this document
+    const tf = new Map<string, number>();
+    for (const t of tokens) {
+      tf.set(t, (tf.get(t) ?? 0) + 1);
+    }
+
+    // Document frequency across corpus
+    const df = new Map<string, number>();
+    for (const d of this.documents) {
+      const docTokens = new Set(quarrel.tokenize(quarrel.normalizeMarkdown(d.content)));
+      for (const t of docTokens) {
+        df.set(t, (df.get(t) ?? 0) + 1);
+      }
+    }
+
+    const n = this.documents.length;
+    const scored: Array<{ term: string; score: number }> = [];
+
+    for (const [term, freq] of tf) {
+      const idf = Math.log((n + 1) / ((df.get(term) ?? 0) + 1)) + 1;
+      scored.push({ term, score: freq * idf });
+    }
+
+    scored.sort((a, b) => b.score - a.score);
+    return scored.slice(0, count).map((s) => s.term);
+  }
+
+  /**
+   * Get similar notes in a structured format for display, with metadata
    */
   getSimilarNotes(file: TFile): SimilarNote[] {
     const results = this.findSimilar(file);
-    return results.map((r) => ({
-      path: r.file.path,
-      title: r.file.title,
-      similarity: r.score,
-      percentage: Math.round(r.score * 100),
-    }));
+    return results.map((r) => {
+      const obsFile = this.app.vault.getAbstractFileByPath(r.file.path);
+      const metadata =
+        obsFile instanceof TFile
+          ? this.app.metadataCache.getFileCache(obsFile)
+          : null;
+
+      // Extract snippet: first non-empty paragraph of content
+      const snippet = this.extractSnippet(r.file.content);
+
+      // Extract tags from frontmatter and inline
+      const tags: string[] = [];
+      if (metadata?.frontmatter?.tags) {
+        const fmTags = metadata.frontmatter.tags;
+        if (Array.isArray(fmTags)) {
+          tags.push(...fmTags);
+        } else if (typeof fmTags === "string") {
+          tags.push(fmTags);
+        }
+      }
+      if (metadata?.tags) {
+        for (const t of metadata.tags) {
+          const clean = t.tag.replace(/^#/, "");
+          if (!tags.includes(clean)) tags.push(clean);
+        }
+      }
+
+      // Date: prefer frontmatter date, fallback to file stat
+      let date: Date | null = null;
+      if (obsFile instanceof TFile) {
+        date = new Date(obsFile.stat.mtime);
+      }
+
+      // Folder
+      const folder = r.file.path.contains("/")
+        ? r.file.path.substring(0, r.file.path.lastIndexOf("/"))
+        : "";
+
+      // Title: prefer frontmatter title
+      const title = metadata?.frontmatter?.title ?? r.file.title;
+
+      return {
+        path: r.file.path,
+        title,
+        similarity: r.score,
+        percentage: Math.round(r.score * 100),
+        snippet,
+        tags,
+        date,
+        folder,
+      };
+    });
+  }
+
+  /**
+   * Extract a short snippet from note content
+   */
+  private extractSnippet(content: string, maxLen = 120): string {
+    // Strip frontmatter
+    const stripped = quarrel.stripFrontmatter(content);
+    // Find first non-empty, non-heading line
+    const lines = stripped.split("\n");
+    for (const line of lines) {
+      const trimmed = line.trim();
+      if (
+        trimmed.length > 0 &&
+        !trimmed.startsWith("#") &&
+        !trimmed.startsWith("---") &&
+        !trimmed.startsWith("```")
+      ) {
+        if (trimmed.length > maxLen) {
+          return trimmed.substring(0, maxLen) + " ...";
+        }
+        return trimmed;
+      }
+    }
+    return "";
   }
 
   /**

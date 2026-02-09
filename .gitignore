@@ -1,6 +1,8 @@
 # Build output
 main.js
 *.js.map
+dist/
+release/
 
 # Dependencies
 node_modules/
@@ -18,3 +20,8 @@ npm-debug.log*
 
 # Testing
 coverage/
+
+# Internal workflow
+.forage/
+FORAGE-*.md
+NEXT_ACTIONS.md

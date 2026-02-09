@@ -1,70 +1,344 @@
-/* Similar Notes Plugin Styles */
+/* Quarrel Similar Notes – Redesigned Styles */
 
 .similar-notes-container {
-  padding: 10px;
+  padding: 12px;
+  font-size: var(--font-ui-small);
 }
+
+/* ── Empty state ────────────────────────────────────── */
 
 .similar-notes-empty {
   text-align: center;
-  padding: 20px;
+  padding: 20px 10px;
   color: var(--text-muted);
 }
 
 .similar-notes-empty-title {
   font-weight: 500;
-  margin-bottom: 5px;
+  margin-bottom: 4px;
 }
 
 .similar-notes-empty-desc {
   font-size: 0.85em;
 }
 
-.similar-notes-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
+/* ── Header ─────────────────────────────────────────── */
 
-.similar-notes-item {
-  margin-bottom: 4px;
-}
-
-.similar-notes-link {
+.sn-header {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  padding: 6px 10px;
-  border-radius: 4px;
-  text-decoration: none;
-  color: var(--text-normal);
-  transition: background-color 0.1s ease;
+  align-items: flex-start;
+  margin-bottom: 10px;
 }
 
-.similar-notes-link:hover {
+.sn-header-left {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.sn-title {
+  margin: 0;
+  font-size: var(--font-ui-medium);
+  font-weight: 700;
+  color: var(--text-normal);
+}
+
+.sn-count {
+  font-size: var(--font-ui-smaller);
+  color: var(--text-muted);
+}
+
+.sn-refresh-btn {
+  flex-shrink: 0;
+  cursor: pointer;
+  color: var(--text-muted);
+  padding: 4px;
+  border-radius: var(--radius-s);
+}
+
+.sn-refresh-btn:hover {
+  color: var(--text-normal);
   background-color: var(--background-modifier-hover);
 }
 
-.similar-notes-title {
-  flex: 1;
+/* ── Keyword Chips ──────────────────────────────────── */
+
+.sn-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+
+.sn-chip {
+  display: inline-block;
+  padding: 3px 10px;
+  font-size: var(--font-ui-smaller);
+  border-radius: var(--radius-m);
+  border: 1px solid var(--background-modifier-border);
+  background: var(--background-secondary);
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+  line-height: 1.4;
+}
+
+.sn-chip:hover {
+  background: var(--background-modifier-hover);
+  color: var(--text-normal);
+}
+
+.sn-chip-active {
+  background: var(--interactive-accent);
+  color: var(--text-on-accent);
+  border-color: var(--interactive-accent);
+}
+
+.sn-chip-active:hover {
+  background: var(--interactive-accent-hover);
+  color: var(--text-on-accent);
+}
+
+.sn-chip-reset {
+  font-style: italic;
+  opacity: 0.7;
+  border-style: dashed;
+}
+
+.sn-chip-reset:hover {
+  opacity: 1;
+}
+
+/* ── Cards container ────────────────────────────────── */
+
+.sn-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+/* ── Single card ────────────────────────────────────── */
+
+.sn-card {
+  background: var(--background-secondary);
+  border-radius: var(--radius-m);
+  overflow: hidden;
+  transition: background 0.15s;
+}
+
+.sn-card:hover {
+  background: var(--background-secondary-alt);
+}
+
+/* ── Card summary (always visible) ──────────────────── */
+
+.sn-card-summary {
+  cursor: pointer;
+  padding: 10px 12px 8px;
+  user-select: none;
+}
+
+.sn-card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.sn-card-title {
+  font-weight: 600;
+  color: var(--text-normal);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  margin-right: 10px;
+  flex: 1;
+  cursor: pointer;
 }
 
-.similar-notes-score {
+.sn-card-title:hover {
+  text-decoration: underline;
+  color: var(--text-accent);
+}
+
+.sn-card-date {
   flex-shrink: 0;
-  font-size: 0.85em;
-  color: var(--text-muted);
-  background-color: var(--background-modifier-border);
-  padding: 2px 6px;
-  border-radius: 3px;
+  font-size: var(--font-ui-smaller);
+  color: var(--text-faint);
 }
 
-.similar-notes-footer {
-  margin-top: 15px;
+/* ── Progress bar ───────────────────────────────────── */
+
+.sn-card-bar-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.sn-bar-track {
+  flex: 1;
+  height: 6px;
+  background: var(--background-modifier-border);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.sn-bar-fill {
+  height: 100%;
+  background: var(--interactive-accent);
+  border-radius: 3px;
+  transition: width 0.3s ease;
+}
+
+.sn-card-pct {
+  flex-shrink: 0;
+  font-size: var(--font-ui-smaller);
+  color: var(--text-muted);
+  min-width: 32px;
+  text-align: right;
+}
+
+/* ── Card detail (expanded) ─────────────────────────── */
+
+.sn-card-detail {
+  display: none;
+  padding: 0 12px 10px;
+}
+
+.sn-card-open .sn-card-detail {
+  display: block;
+}
+
+.sn-card-snippet {
+  margin: 6px 0 8px;
+  font-size: var(--font-ui-smaller);
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+.sn-card-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-bottom: 8px;
+}
+
+.sn-tag {
+  font-size: 0.75em;
+  padding: 1px 6px;
+  border-radius: var(--radius-s);
+  background: var(--background-modifier-border);
+  color: var(--text-muted);
+}
+
+.sn-card-actions {
+  display: flex;
+  gap: 6px;
+}
+
+.sn-action-btn {
+  font-size: var(--font-ui-smaller);
+  padding: 3px 10px;
+  border-radius: var(--radius-s);
+  border: 1px solid var(--background-modifier-border);
+  background: var(--background-primary);
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+
+.sn-action-btn:hover {
+  background: var(--background-modifier-hover);
+  color: var(--text-normal);
+}
+
+/* ── Footer ─────────────────────────────────────────── */
+
+.sn-footer {
+  margin-top: 14px;
   padding-top: 10px;
   border-top: 1px solid var(--background-modifier-border);
-  text-align: center;
+}
+
+/* ── Collapsible (Filters) ──────────────────────────── */
+
+.sn-collapsible {
+  margin-bottom: 8px;
+}
+
+.sn-collapsible-title {
+  cursor: pointer;
+  font-size: var(--font-ui-small);
+  font-weight: 600;
   color: var(--text-muted);
+  padding: 4px 0;
+  user-select: none;
+  list-style: none;
+}
+
+.sn-collapsible-title::marker,
+.sn-collapsible-title::-webkit-details-marker {
+  display: none;
+}
+
+.sn-collapsible-title::before {
+  content: "\25BE ";
+  font-size: 0.85em;
+}
+
+.sn-collapsible[open] .sn-collapsible-title::before {
+  content: "\25B4 ";
+}
+
+.sn-collapsible-body {
+  padding: 6px 0 4px;
+}
+
+.sn-filter-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 3px 0;
+  gap: 12px;
+}
+
+.sn-filter-row label {
+  font-size: var(--font-ui-smaller);
+  color: var(--text-muted);
+}
+
+.sn-filter-row input {
+  width: 60px;
+  text-align: center;
+  font-size: var(--font-ui-smaller);
+  padding: 2px 6px;
+  border: 1px solid var(--background-modifier-border);
+  border-radius: var(--radius-s);
+  background: var(--background-primary);
+  color: var(--text-normal);
+}
+
+/* ── Index status ───────────────────────────────────── */
+
+.sn-index-status {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.sn-status-text {
+  font-size: var(--font-ui-smaller);
+  color: var(--text-faint);
+}
+
+.sn-reindex-link {
+  font-size: var(--font-ui-smaller);
+  color: var(--text-accent);
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.sn-reindex-link:hover {
+  text-decoration: underline;
 }

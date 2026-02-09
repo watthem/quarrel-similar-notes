@@ -1,7 +1,7 @@
 {
   "id": "quarrel-similar-notes",
   "name": "Similar Notes",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "minAppVersion": "1.0.0",
   "description": "Find semantically similar notes using local TF-IDF. No API keys, no external calls.",
   "author": "watthem",
