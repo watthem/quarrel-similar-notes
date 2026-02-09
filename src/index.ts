@@ -208,10 +208,13 @@ export class SimilarNotesIndex {
   getSimilarNotes(file: TFile): SimilarNote[] {
     const results = this.findSimilar(file);
     return results.map((r) => {
-      const obsFile = this.app.vault.getAbstractFileByPath(r.file.path);
+      const getByPath = (this.app.vault as unknown as {
+        getAbstractFileByPath?: (path: string) => unknown;
+      }).getAbstractFileByPath;
+      const obsFile = typeof getByPath === "function" ? getByPath(r.file.path) : null;
       const metadata =
         obsFile instanceof TFile
-          ? this.app.metadataCache.getFileCache(obsFile)
+          ? this.app.metadataCache?.getFileCache?.(obsFile)
           : null;
 
       // Extract snippet: first non-empty paragraph of content
@@ -241,7 +244,7 @@ export class SimilarNotesIndex {
       }
 
       // Folder
-      const folder = r.file.path.contains("/")
+      const folder = r.file.path.includes("/")
         ? r.file.path.substring(0, r.file.path.lastIndexOf("/"))
         : "";
 

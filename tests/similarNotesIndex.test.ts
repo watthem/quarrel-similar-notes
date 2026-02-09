@@ -1,6 +1,8 @@
 import { describe, expect, it, vi } from "vitest";
 
-vi.mock("obsidian", () => ({}));
+vi.mock("obsidian", () => ({
+  TFile: class TFile {},
+}));
 
 const { SimilarNotesIndex } = await import("../src/index");
 
