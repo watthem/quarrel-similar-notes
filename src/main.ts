@@ -1,4 +1,4 @@
-import { Notice, Plugin, WorkspaceLeaf } from "obsidian";
+import { Notice, Plugin, TAbstractFile, TFile, WorkspaceLeaf } from "obsidian";
 import { SimilarNotesIndex } from "./index";
 import { SimilarNotesView, VIEW_TYPE_SIMILAR_NOTES } from "./SimilarNotesView";
 import {
@@ -10,6 +10,8 @@ import {
 export default class SimilarNotesPlugin extends Plugin {
   settings: SimilarNotesSettings = DEFAULT_SETTINGS;
   index: SimilarNotesIndex | null = null;
+  pendingChanges: Set<string> = new Set();
+  private autoReindexTimer: number | null = null;
 
   async onload(): Promise<void> {
     await this.loadSettings();
@@ -79,10 +81,16 @@ export default class SimilarNotesPlugin extends Plugin {
       if (this.settings.openOnStart) {
         this.activateView();
       }
+
+      this.registerVaultListeners();
     });
   }
 
   onunload(): void {
+    if (this.autoReindexTimer !== null) {
+      window.clearTimeout(this.autoReindexTimer);
+      this.autoReindexTimer = null;
+    }
     this.app.workspace.detachLeavesOfType(VIEW_TYPE_SIMILAR_NOTES);
   }
 
@@ -104,21 +112,54 @@ export default class SimilarNotesPlugin extends Plugin {
     }
   }
 
-  async rebuildIndex(): Promise<void> {
+  async rebuildIndex(silent = false): Promise<void> {
     if (!this.index) return;
 
-    // eslint-disable-next-line no-new
-    new Notice("Building similarity index...");
+    if (!silent) {
+      // eslint-disable-next-line no-new
+      new Notice("Building similarity index...");
+    }
     await this.index.buildIndex();
-    // eslint-disable-next-line no-new
-    new Notice(`Index built: ${this.index.getDocumentCount()} notes`);
+    if (!silent) {
+      // eslint-disable-next-line no-new
+      new Notice(`Index built: ${this.index.getDocumentCount()} notes`);
+    }
 
-    // Refresh any open views
+    this.pendingChanges.clear();
+    if (this.autoReindexTimer !== null) {
+      window.clearTimeout(this.autoReindexTimer);
+      this.autoReindexTimer = null;
+    }
+
+    this.refreshViews();
+  }
+
+  private refreshViews(): void {
     this.app.workspace.getLeavesOfType(VIEW_TYPE_SIMILAR_NOTES).forEach((leaf) => {
       if (leaf.view instanceof SimilarNotesView) {
         leaf.view.refresh();
       }
     });
+  }
+
+  private registerVaultListeners(): void {
+    const trackChange = (file: TAbstractFile) => {
+      if (!(file instanceof TFile) || file.extension !== "md") return;
+      this.pendingChanges.add(file.path);
+
+      if (this.settings.autoReindex) {
+        if (this.autoReindexTimer !== null) {
+          window.clearTimeout(this.autoReindexTimer);
+        }
+        this.autoReindexTimer = window.setTimeout(() => {
+          this.rebuildIndex(true);
+        }, this.settings.autoReindexDelay * 1000);
+      }
+    };
+
+    this.registerEvent(this.app.vault.on("create", trackChange));
+    this.registerEvent(this.app.vault.on("modify", trackChange));
+    this.registerEvent(this.app.vault.on("delete", trackChange));
   }
 
   async activateView(): Promise<void> {

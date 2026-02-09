@@ -7,6 +7,8 @@ export interface SimilarNotesSettings {
   hashDim: number;
   contentExcerptLength: number;
   openOnStart: boolean;
+  autoReindex: boolean;
+  autoReindexDelay: number;
 }
 
 export const DEFAULT_SETTINGS: SimilarNotesSettings = {
@@ -15,6 +17,8 @@ export const DEFAULT_SETTINGS: SimilarNotesSettings = {
   hashDim: 2048,
   contentExcerptLength: 1500,
   openOnStart: false,
+  autoReindex: false,
+  autoReindexDelay: 30,
 };
 
 export class SimilarNotesSettingTab extends PluginSettingTab {
@@ -99,6 +103,32 @@ export class SimilarNotesSettingTab extends PluginSettingTab {
           this.plugin.settings.openOnStart = value;
           await this.plugin.saveSettings();
         })
+      );
+
+    new Setting(containerEl).setHeading().setName("Experimental");
+
+    new Setting(containerEl)
+      .setName("Auto-reindex on changes")
+      .setDesc("Automatically rebuild the index when notes change. May impact performance on large vaults.")
+      .addToggle((toggle) =>
+        toggle.setValue(this.plugin.settings.autoReindex).onChange(async (value) => {
+          this.plugin.settings.autoReindex = value;
+          await this.plugin.saveSettings();
+        })
+      );
+
+    new Setting(containerEl)
+      .setName("Auto-reindex delay")
+      .setDesc("Seconds to wait after last change before auto-reindexing")
+      .addSlider((slider) =>
+        slider
+          .setLimits(5, 120, 5)
+          .setValue(this.plugin.settings.autoReindexDelay)
+          .setDynamicTooltip()
+          .onChange(async (value) => {
+            this.plugin.settings.autoReindexDelay = value;
+            await this.plugin.saveSettings();
+          })
       );
 
     new Setting(containerEl).setHeading().setName("Index management");

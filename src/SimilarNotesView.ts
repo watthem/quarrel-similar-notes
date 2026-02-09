@@ -246,20 +246,48 @@ export class SimilarNotesView extends ItemView {
 
   private renderFooter(): void {
     const footer = this.contentEl.createDiv({ cls: "sn-footer" });
-
-    // Filters section
     this.renderFiltersSection(footer);
-
-    // Index status section
+    this.renderStaleBanner(footer);
     this.renderIndexStatus(footer);
   }
 
-  private renderFiltersSection(parent: HTMLElement): void {
-    const details = parent.createEl("details", { cls: "sn-collapsible" });
-    const summary = details.createEl("summary", { cls: "sn-collapsible-title" });
-    summary.textContent = "Filters";
+  private renderStaleBanner(parent: HTMLElement): void {
+    const count = this.plugin.pendingChanges.size;
+    if (count === 0) return;
 
-    const body = details.createDiv({ cls: "sn-collapsible-body" });
+    const banner = parent.createDiv({ cls: "sn-stale-banner" });
+    banner.createEl("span", {
+      text: `${count} note${count !== 1 ? "s" : ""} changed since last index`,
+      cls: "sn-stale-text",
+    });
+
+    if (this.plugin.settings.autoReindex) {
+      banner.createEl("span", {
+        text: "auto-reindex pending",
+        cls: "sn-stale-auto",
+      });
+    } else {
+      const link = banner.createEl("a", { text: "Re-index", cls: "sn-stale-reindex", href: "#" });
+      link.addEventListener("click", (e) => {
+        e.preventDefault();
+        this.plugin.rebuildIndex();
+      });
+    }
+  }
+
+  private renderFiltersSection(parent: HTMLElement): void {
+    const details = parent.createEl("details", { cls: "sn-collapsible sn-filters-panel" });
+    const summary = details.createEl("summary", { cls: "sn-collapsible-title" });
+
+    const iconEl = summary.createDiv({ cls: "sn-collapsible-icon" });
+    setIcon(iconEl, "chevron-right");
+    summary.createEl("span", { text: "Filters", cls: "sn-collapsible-label" });
+
+    details.addEventListener("toggle", () => {
+      setIcon(iconEl, details.open ? "chevron-down" : "chevron-right");
+    });
+
+    const body = details.createDiv({ cls: "sn-collapsible-body sn-filters-body" });
 
     // Max results
     const maxRow = body.createDiv({ cls: "sn-filter-row" });
@@ -276,7 +304,7 @@ export class SimilarNotesView extends ItemView {
     });
 
     // Min similarity
-    const simRow = body.createDiv({ cls: "sn-filter-row" });
+    const simRow = body.createDiv({ cls: "sn-filter-row sn-filter-row-alt" });
     simRow.createEl("label", { text: "Min similarity (%)" });
     const simInput = simRow.createEl("input", { type: "number" });
     simInput.type = "number";
