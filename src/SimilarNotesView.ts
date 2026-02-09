@@ -304,7 +304,7 @@ export class SimilarNotesView extends ItemView {
     });
 
     // Min similarity
-    const simRow = body.createDiv({ cls: "sn-filter-row sn-filter-row-alt" });
+    const simRow = body.createDiv({ cls: "sn-filter-row" });
     simRow.createEl("label", { text: "Min similarity (%)" });
     const simInput = simRow.createEl("input", { type: "number" });
     simInput.type = "number";

@@ -374,10 +374,8 @@
   overflow-y: auto;
 }
 
-.sn-filter-row-alt {
-  background: var(--background-secondary);
-  border-radius: var(--radius-s);
-  padding: 5px 6px;
+.sn-filter-row + .sn-filter-row {
+  border-top: 1px solid var(--background-modifier-border);
 }
 
 /* ── Stale banner ──────────────────────────────────── */
