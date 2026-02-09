@@ -208,7 +208,10 @@ export class SimilarNotesIndex {
   getSimilarNotes(file: TFile): SimilarNote[] {
     const results = this.findSimilar(file);
     return results.map((r) => {
-      const obsFile = this.app.vault.getAbstractFileByPath(r.file.path);
+      const getByPath = (this.app.vault as unknown as {
+        getAbstractFileByPath?: (path: string) => unknown;
+      }).getAbstractFileByPath;
+      const obsFile = typeof getByPath === "function" ? getByPath(r.file.path) : null;
       const metadata =
         obsFile instanceof TFile
           ? this.app.metadataCache?.getFileCache?.(obsFile)
