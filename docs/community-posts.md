@@ -26,7 +26,10 @@ The plugin is MIT licensed and on GitHub: [quarrel-similar-notes](https://github
 
 Install manually by dropping the release files into `.obsidian/plugins/quarrel-similar-notes/`. Not yet in the community plugin directory.
 
-<!-- TODO: Insert screenshots here -->
+![Full app view with sidebar results](docs/screenshots/empty-state.png)
+![Keyword chips with active filters](docs/screenshots/keyword-chips.png)
+![Expanded result card with snippet and tags](docs/screenshots/card-expanded.png)
+![Settings tab](docs/screenshots/settings.png)
 
 If you're interested, open an issue on the repo or reply here. I'd especially value feedback from people with 500+ note vaults — I want to understand how TF-IDF holds up at scale versus embedding-based approaches.
 
@@ -57,6 +60,9 @@ I'm looking for design partners — people willing to try it and share honest fe
 GitHub: [quarrel-similar-notes](https://github.com/watthem/quarrel-similar-notes)
 Manual install only for now (release files in the repo).
 
-<!-- TODO: Insert screenshots here -->
+![Full app view with sidebar results](docs/screenshots/empty-state.png)
+![Keyword chips with active filters](docs/screenshots/keyword-chips.png)
+![Expanded result card with snippet and tags](docs/screenshots/card-expanded.png)
+![Settings tab](docs/screenshots/settings.png)
 
 Happy to answer questions about the approach or the underlying [quarrel](https://github.com/watthem/quarrel) library.

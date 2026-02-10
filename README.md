@@ -2,7 +2,7 @@
 
 An Obsidian plugin that surfaces semantically similar notes in a sidebar panel. Powered by TF-IDF + cosine similarity via [@watthem/quarrel](https://github.com/watthem/quarrel).
 
-<!-- TODO: ![Screenshot of Similar Notes sidebar](docs/screenshots/sidebar-overview.png) -->
+![Similar Notes sidebar showing results for a note about comets](docs/screenshots/empty-state.png)
 
 ## Features
 
@@ -35,7 +35,7 @@ Search for "Similar Notes" in Obsidian's Community Plugins browser.
 4. Click keyword chips to filter results by specific terms
 5. Expand a result card for content snippet, tags, and a direct link
 
-<!-- TODO: ![Keyword chips filtering results](docs/screenshots/keyword-chips.png) -->
+![Keyword chips with active filters highlighted](docs/screenshots/keyword-chips.png)
 
 ### Commands
 
@@ -60,7 +60,7 @@ Search for "Similar Notes" in Obsidian's Community Plugins browser.
 | Auto-reindex | Off | Rebuild index automatically when vault files change |
 | Auto-reindex Delay | 30s | Debounce window before triggering rebuild (5–120s) |
 
-<!-- TODO: ![Settings tab](docs/screenshots/settings.png) -->
+![Settings tab with experimental auto-reindex](docs/screenshots/settings.png)
 
 ## How It Works
 
