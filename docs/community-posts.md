@@ -1,5 +1,10 @@
 # Community Posts — Design Partner Recruitment
 
+## Posting Order
+
+1. Post to Obsidian Forum first (longer-lived discovery + better threaded feedback).
+2. Post to Reddit second, 6-12 hours later, using the same release and screenshot set.
+
 ## Obsidian Forum Post
 
 **Category**: Share & showcase
@@ -23,13 +28,14 @@ I've been building a plugin that shows similar notes in a sidebar panel using TF
 - Edge cases I haven't hit — large vaults, unusual note structures, mobile usage
 
 The plugin is MIT licensed and on GitHub: [quarrel-similar-notes](https://github.com/watthem/quarrel-similar-notes)
+Latest release (manual install assets): [v0.0.2](https://github.com/watthem/quarrel-similar-notes/releases/tag/v0.0.2)
 
 Install manually by dropping the release files into `.obsidian/plugins/quarrel-similar-notes/`. Not yet in the community plugin directory.
 
-![Full app view with sidebar results](docs/screenshots/empty-state.png)
-![Keyword chips with active filters](docs/screenshots/keyword-chips.png)
-![Expanded result card with snippet and tags](docs/screenshots/card-expanded.png)
-![Settings tab](docs/screenshots/settings.png)
+[Upload screenshot: full app view]
+[Upload screenshot: keyword chips + filters]
+[Upload screenshot: expanded card with metadata]
+[Upload screenshot: settings panel]
 
 If you're interested, open an issue on the repo or reply here. I'd especially value feedback from people with 500+ note vaults — I want to understand how TF-IDF holds up at scale versus embedding-based approaches.
 
@@ -58,11 +64,11 @@ I'm looking for design partners — people willing to try it and share honest fe
 3. What vault size are you working with and how does performance feel?
 
 GitHub: [quarrel-similar-notes](https://github.com/watthem/quarrel-similar-notes)
-Manual install only for now (release files in the repo).
+Release for manual install: [v0.0.2](https://github.com/watthem/quarrel-similar-notes/releases/tag/v0.0.2)
 
-![Full app view with sidebar results](docs/screenshots/empty-state.png)
-![Keyword chips with active filters](docs/screenshots/keyword-chips.png)
-![Expanded result card with snippet and tags](docs/screenshots/card-expanded.png)
-![Settings tab](docs/screenshots/settings.png)
+[Upload screenshot: full app view]
+[Upload screenshot: keyword chips + filters]
+[Upload screenshot: expanded card with metadata]
+[Upload screenshot: settings panel]
 
 Happy to answer questions about the approach or the underlying [quarrel](https://github.com/watthem/quarrel) library.
