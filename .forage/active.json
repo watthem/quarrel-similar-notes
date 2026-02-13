@@ -1,0 +1,28 @@
+{
+  "counters": {
+    "DEV": 2
+  },
+  "current_month": "2026-02",
+  "items": [
+    {
+      "id": "quarrel-similar-notes.DEV-2026-02-001",
+      "next_step": "Review quarrel-similar-notes repo state and identify next actions",
+      "pipeline": "dev",
+      "priority": "P2",
+      "stage": "draft",
+      "title": "Initialize forage pipeline",
+      "type": "DEV",
+      "updated": "2026-02-09T00:00:00Z"
+    },
+    {
+      "id": "quarrel-similar-notes.DEV-2026-02-001",
+      "pipeline": "dev",
+      "priority": "P2",
+      "stage": "draft",
+      "title": "Fix the reindex functionality in the quarrel-similar-files plugin to ensure it works when auto index is off.",
+      "type": "DEV",
+      "updated": "2026-02-13T01:39:05Z"
+    }
+  ],
+  "resolved": []
+}
