@@ -1,6 +1,6 @@
 {
   "name": "quarrel-similar-notes",
-  "version": "2026.2.27",
+  "version": "0.0.2",
   "description": "Find semantically similar notes using local TF-IDF. No API keys, no external calls.",
   "main": "main.js",
   "scripts": {
@@ -19,6 +19,14 @@
     "related-notes"
   ],
   "author": "watthem",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/watthem/quarrel-similar-notes.git"
+  },
+  "bugs": {
+    "url": "https://github.com/watthem/quarrel-similar-notes/issues"
+  },
+  "homepage": "https://github.com/watthem/quarrel-similar-notes#readme",
   "license": "MIT",
   "dependencies": {
     "@watthem/quarrel": "^0.1.1"

@@ -6,13 +6,13 @@ export const VIEW_TYPE_SIMILAR_NOTES = "similar-notes-view";
 
 export class SimilarNotesView extends ItemView {
   plugin: SimilarNotesPlugin;
-  private contentEl: HTMLElement;
+  private viewContentEl: HTMLElement;
   private activeChips: Set<string> = new Set();
 
   constructor(leaf: WorkspaceLeaf, plugin: SimilarNotesPlugin) {
     super(leaf);
     this.plugin = plugin;
-    this.contentEl = this.containerEl.children[1] as HTMLElement;
+    this.viewContentEl = this.containerEl.children[1] as HTMLElement;
   }
 
   getViewType(): string {
@@ -20,7 +20,7 @@ export class SimilarNotesView extends ItemView {
   }
 
   getDisplayText(): string {
-    return "Similar Notes";
+    return "Similar notes";
   }
 
   getIcon(): string {
@@ -28,8 +28,8 @@ export class SimilarNotesView extends ItemView {
   }
 
   async onOpen(): Promise<void> {
-    this.contentEl.empty();
-    this.contentEl.addClass("similar-notes-container");
+    this.viewContentEl.empty();
+    this.viewContentEl.addClass("similar-notes-container");
 
     this.registerEvent(
       this.app.workspace.on("active-leaf-change", () => {
@@ -42,11 +42,11 @@ export class SimilarNotesView extends ItemView {
   }
 
   async onClose(): Promise<void> {
-    this.contentEl.empty();
+    this.viewContentEl.empty();
   }
 
   refresh(): void {
-    this.contentEl.empty();
+    this.viewContentEl.empty();
 
     const activeFile = this.app.workspace.getActiveFile();
 
@@ -80,10 +80,10 @@ export class SimilarNotesView extends ItemView {
   // ── Header ──────────────────────────────────────────────
 
   private renderHeader(count: number): void {
-    const header = this.contentEl.createDiv({ cls: "sn-header" });
+    const header = this.viewContentEl.createDiv({ cls: "sn-header" });
 
     const left = header.createDiv({ cls: "sn-header-left" });
-    left.createEl("h4", { text: "Quarrel Similar Notes", cls: "sn-title" });
+    left.createEl("h4", { text: "Similar notes", cls: "sn-title" });
     left.createEl("span", {
       text: `${count} similar note${count !== 1 ? "s" : ""}`,
       cls: "sn-count",
@@ -91,7 +91,7 @@ export class SimilarNotesView extends ItemView {
 
     const refreshBtn = header.createDiv({ cls: "sn-refresh-btn clickable-icon" });
     setIcon(refreshBtn, "refresh-cw");
-    refreshBtn.setAttribute("aria-label", "Re-index vault");
+    refreshBtn.setAttribute("aria-label", "Rebuild index");
     refreshBtn.addEventListener("click", () => {
       this.plugin.rebuildIndex();
     });
@@ -102,7 +102,7 @@ export class SimilarNotesView extends ItemView {
   private renderKeywordChips(keywords: string[]): void {
     if (keywords.length === 0) return;
 
-    const chipsRow = this.contentEl.createDiv({ cls: "sn-chips" });
+    const chipsRow = this.viewContentEl.createDiv({ cls: "sn-chips" });
 
     for (const kw of keywords) {
       const chip = chipsRow.createEl("button", {
@@ -126,7 +126,7 @@ export class SimilarNotesView extends ItemView {
 
     if (this.activeChips.size > 0) {
       const resetBtn = chipsRow.createEl("button", {
-        text: "reset",
+        text: "Reset",
         cls: "sn-chip sn-chip-reset",
       });
       resetBtn.addEventListener("click", () => {
@@ -139,7 +139,7 @@ export class SimilarNotesView extends ItemView {
   // ── Note Cards ──────────────────────────────────────────
 
   private renderCards(results: SimilarNote[]): void {
-    const list = this.contentEl.createDiv({ cls: "sn-cards" });
+    const list = this.viewContentEl.createDiv({ cls: "sn-cards" });
 
     // Sort/filter by active chips if any
     let filtered = results;
@@ -245,7 +245,7 @@ export class SimilarNotesView extends ItemView {
   // ── Footer (Filters + Index Status) ────────────────────
 
   private renderFooter(): void {
-    const footer = this.contentEl.createDiv({ cls: "sn-footer" });
+    const footer = this.viewContentEl.createDiv({ cls: "sn-footer" });
     this.renderFiltersSection(footer);
     this.renderStaleBanner(footer);
     this.renderIndexStatus(footer);
@@ -267,7 +267,7 @@ export class SimilarNotesView extends ItemView {
         cls: "sn-stale-auto",
       });
     } else {
-      const link = banner.createEl("a", { text: "Re-index", cls: "sn-stale-reindex", href: "#" });
+      const link = banner.createEl("a", { text: "Rebuild index", cls: "sn-stale-reindex", href: "#" });
       link.addEventListener("click", (e) => {
         e.preventDefault();
         this.plugin.rebuildIndex();
@@ -338,7 +338,7 @@ export class SimilarNotesView extends ItemView {
     }
 
     const reindexLink = statusDiv.createEl("a", {
-      text: "Re-index now",
+      text: "Rebuild index",
       cls: "sn-reindex-link",
       href: "#",
     });
@@ -351,7 +351,7 @@ export class SimilarNotesView extends ItemView {
   // ── Helpers ─────────────────────────────────────────────
 
   private renderEmptyState(title: string, description?: string): void {
-    const emptyEl = this.contentEl.createDiv({ cls: "similar-notes-empty" });
+    const emptyEl = this.viewContentEl.createDiv({ cls: "similar-notes-empty" });
     emptyEl.createEl("p", { text: title, cls: "similar-notes-empty-title" });
     if (description) {
       emptyEl.createEl("p", { text: description, cls: "similar-notes-empty-desc" });

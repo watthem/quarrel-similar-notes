@@ -33,7 +33,7 @@ export class SimilarNotesSettingTab extends PluginSettingTab {
     const { containerEl } = this;
     containerEl.empty();
 
-    new Setting(containerEl).setHeading().setName("Similar notes");
+    new Setting(containerEl).setHeading().setName("General");
 
     new Setting(containerEl)
       .setName("Maximum results")

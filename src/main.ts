@@ -29,7 +29,7 @@ export default class SimilarNotesPlugin extends Plugin {
     this.registerView(VIEW_TYPE_SIMILAR_NOTES, (leaf) => new SimilarNotesView(leaf, this));
 
     // Add ribbon icon
-    this.addRibbonIcon("file-search", "Similar Notes", () => {
+    this.addRibbonIcon("file-search", "Open similar notes", () => {
       this.activateView();
     });
 

@@ -1,10 +1,10 @@
+import type { App, TFile } from "obsidian";
 import { describe, expect, it, vi } from "vitest";
+import { SimilarNotesIndex } from "../src/index";
 
 vi.mock("obsidian", () => ({
   TFile: class TFile {},
 }));
-
-const { SimilarNotesIndex } = await import("../src/index");
 
 type MockFile = {
   path: string;
@@ -65,7 +65,7 @@ describe("SimilarNotesIndex", () => {
       "notes/b.md": "Closures in JavaScript are useful",
     });
 
-    const index = new SimilarNotesIndex(app, { minSimilarity: 0.1 });
+    const index = new SimilarNotesIndex(app as unknown as App, { minSimilarity: 0.1 });
     await index.buildIndex();
 
     expect(index.getDocumentCount()).toBe(2);
@@ -79,13 +79,16 @@ describe("SimilarNotesIndex", () => {
       "notes/c.md": "Bananas apples oranges",
     });
 
-    const index = new SimilarNotesIndex(app, { minSimilarity: 0.05, maxResults: 2 });
+    const index = new SimilarNotesIndex(app as unknown as App, {
+      minSimilarity: 0.05,
+      maxResults: 2,
+    });
     await index.buildIndex();
 
     const file = getFile("notes/a.md");
     expect(file).not.toBeNull();
 
-    const results = index.getSimilarNotes(file!);
+    const results = index.getSimilarNotes(file as unknown as TFile);
     expect(results.length).toBeGreaterThan(0);
     expect(results[0].path).toBe("notes/b.md");
     expect(results[0].similarity).toBeGreaterThan(results[results.length - 1].similarity);
@@ -97,7 +100,7 @@ describe("SimilarNotesIndex", () => {
       "notes/b.md": "Python decorators",
     });
 
-    const index = new SimilarNotesIndex(app, { minSimilarity: 0.1 });
+    const index = new SimilarNotesIndex(app as unknown as App, { minSimilarity: 0.1 });
     await index.buildIndex();
 
     setFiles({
@@ -113,7 +116,7 @@ describe("SimilarNotesIndex", () => {
 
   it("handles empty vaults", async () => {
     const { app } = createMockApp({});
-    const index = new SimilarNotesIndex(app, { minSimilarity: 0.1 });
+    const index = new SimilarNotesIndex(app as unknown as App, { minSimilarity: 0.1 });
     await index.buildIndex();
 
     expect(index.getDocumentCount()).toBe(0);
